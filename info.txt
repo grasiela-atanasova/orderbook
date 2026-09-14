@@ -1,0 +1,13 @@
+----> NOTE 1 <----
+
+struct Order{
+    uint64_t id;
+    Side side;
+    OrderType type;
+    uint64_t price; // -> saved as an integer because rounding causes errors, thus 1.05 becomes 105
+    uint64_t quantity;
+    uint64_t sequence;
+};
+
+----> NOTE 2 <----
+
