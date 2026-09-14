@@ -2,7 +2,7 @@
 #include <cstdint>
 
 enum class Side{
-    Order,
+    Buy,
     Sell
 };
 
