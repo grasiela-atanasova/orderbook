@@ -1,11 +1,12 @@
-#include <bits/stdc++.h>
+#include <iostream>
+
 #include "order.hpp"
-using namespace std;
+
 int main()
 {
     Order o {1, Side::Buy, OrderType::Limit, 105, 50, 1};
-    cout << "Order id: " << o.id;
-    cout << " Price: " << o.price;
-    cout << " Quantity: " << o.quantity << endl; 
+    std::cout << "Order id: " << o.id;
+    std::cout << " Price: " << o.price;
+    std::cout << " Quantity: " << o.quantity << std::endl; 
     return 0;
 }
