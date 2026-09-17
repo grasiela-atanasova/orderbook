@@ -49,7 +49,11 @@ std::vector<Trade> OrderBook::add_order(const Order& incoming)
             remaining -= traded;
             resting.quantity -= traded;
 
-            if(resting.quantity == 0) best -> second.pop_front();
+            if(resting.quantity == 0) 
+            {
+                index_.erase(resting.id);
+                best -> second.pop_front();
+            }
             if(best->second.empty())  asks_.erase(best);
         }
     }
@@ -64,7 +68,11 @@ std::vector<Trade> OrderBook::add_order(const Order& incoming)
             remaining -= traded;
             resting.quantity -= traded;
             trades.push_back({resting.id, incoming.id, trade_price, traded});
-            if(resting.quantity == 0) best->second.pop_front();
+            if(resting.quantity == 0) 
+            {
+                index_.erase(resting.id);
+                best->second.pop_front();
+            }
             if(best->second.empty()) bids_.erase(best);
         }
     }
@@ -72,9 +80,43 @@ std::vector<Trade> OrderBook::add_order(const Order& incoming)
     {
         Order leftover = incoming;
         leftover.quantity = remaining;
-        if(incoming.side == Side::Buy) bids_[leftover.price].push_back(leftover);
-        else if(incoming.side == Side::Sell) asks_[leftover.price].push_back(leftover);
+        if(incoming.side == Side::Buy) 
+        {
+            PriceLevel& level = bids_[leftover.price];
+            level.push_back(leftover);
+            index_[leftover.id] = {leftover.side, leftover.price, std::prev(level.end())};
+
+        }
+        else if(incoming.side == Side::Sell)
+        {
+            PriceLevel& level = asks_[leftover.price];
+            level.push_back(leftover);
+            index_[leftover.id] = {leftover.side, leftover.price, std::prev(level.end())};
+        }
     }
 
     return trades;
+}
+
+bool OrderBook::cancel(uint64_t order_id)
+{
+    auto found = index_.find(order_id);
+    if(found == index_.end()) return false;
+    OrderLocation loc = found->second;
+
+    if(loc.side == Side::Buy)
+    {
+        PriceLevel& level = bids_[loc.price];
+        level.erase(loc.it);
+        if(level.empty()) bids_.erase(loc.price);
+    }
+    else if(loc.side == Side::Sell)
+    {
+        PriceLevel& level = asks_[loc.price];
+        level.erase(loc.it);
+        if(level.empty()) asks_.erase(loc.price);
+    }
+    
+    index_.erase(found);
+    return true;
 }
