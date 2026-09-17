@@ -10,4 +10,6 @@ struct Order{
 };
 
 ----> NOTE 2 <----
+need to delete add_limit_order, since add_order already exists now
 
+----> NOTE 3 <----
