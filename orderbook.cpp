@@ -75,4 +75,6 @@ std::vector<Trade> OrderBook::add_order(const Order& incoming)
         if(incoming.side == Side::Buy) bids_[leftover.price].push_back(leftover);
         else if(incoming.side == Side::Sell) asks_[leftover.price].push_back(leftover);
     }
+
+    return trades;
 }
