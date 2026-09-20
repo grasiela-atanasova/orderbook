@@ -22,6 +22,20 @@ void OrderBook::print_book() const{
     }
 }
 
+uint64_t OrderBook::quantity_at(Side side, uint64_t price) const {
+    uint64_t total = 0;
+    if (side == Side::Buy) {
+        auto it = bids_.find(price);
+        if (it == bids_.end()) return 0;
+        for (const Order& o : it->second) total += o.quantity;
+    } else {
+        auto it = asks_.find(price);
+        if (it == asks_.end()) return 0;
+        for (const Order& o : it->second) total += o.quantity;
+    }
+    return total;
+}
+
 bool OrderBook::can_fully_fill(const Order& incoming) const
 {
     uint64_t available = 0;

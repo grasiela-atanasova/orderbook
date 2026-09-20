@@ -16,11 +16,11 @@ struct OrderLocation{
 
 class OrderBook{
 public:
-    void add_limit_order(const Order& order);
     void print_book () const;
     std::vector <Trade> add_order (const Order& incoming);
     bool cancel(uint64_t order_id);
     bool can_fully_fill(const Order& incoming) const;
+    uint64_t quantity_at(Side side, uint64_t price) const;
 
 private: //encapsulation
     std::map<uint64_t, PriceLevel> asks_;
