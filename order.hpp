@@ -8,7 +8,9 @@ enum class Side{
 
 enum class OrderType{
     Limit,
-    Market
+    Market,
+    Ioc, /// Immediate or Cancel
+    Fok  /// Fill or Kill
 };
 
 struct Order{

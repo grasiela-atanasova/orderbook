@@ -39,12 +39,12 @@ std::vector<Trade> OrderBook::add_order(const Order& incoming)
     uint64_t remaining = incoming.quantity;
     if(incoming.side == Side::Buy)
     {
-        while(remaining > 0 && !asks_.empty() && asks_.begin()->first <= incoming.price)
+        while(remaining > 0 && !asks_.empty() && (asks_.begin()->first <= incoming.price || incoming.type == OrderType::Market))
         {
             auto best = asks_.begin();
             int64_t trade_price = best -> first;
             Order& resting = best -> second.front();
-            uint64_t traded = std::min(resting.quantity, incoming.quantity);
+            uint64_t traded = std::min(resting.quantity, remaining);
             trades.push_back({incoming.id, resting.id, trade_price, traded});
             remaining -= traded;
             resting.quantity -= traded;
@@ -59,12 +59,12 @@ std::vector<Trade> OrderBook::add_order(const Order& incoming)
     }
     else if(incoming.side == Side::Sell)
     {
-        while(remaining > 0 && !bids_.empty() && bids_.begin()->first >= incoming.price)
+        while(remaining > 0 && !bids_.empty() && (bids_.begin()->first >= incoming.price || incoming.type == OrderType::Market))
         {
             auto best = bids_.begin();
             Order& resting = best->second.front();
             int64_t trade_price = resting.price;
-            uint64_t traded = std::min(incoming.quantity, resting.quantity);
+            uint64_t traded = std::min(remaining, resting.quantity);
             remaining -= traded;
             resting.quantity -= traded;
             trades.push_back({resting.id, incoming.id, trade_price, traded});
@@ -76,7 +76,7 @@ std::vector<Trade> OrderBook::add_order(const Order& incoming)
             if(best->second.empty()) bids_.erase(best);
         }
     }
-    if(remaining > 0)
+    if(remaining > 0 && incoming.type == OrderType::Limit)
     {
         Order leftover = incoming;
         leftover.quantity = remaining;
@@ -95,6 +95,16 @@ std::vector<Trade> OrderBook::add_order(const Order& incoming)
         }
     }
 
+    else if(remaining > 0 && incoming.type == OrderType::Market)
+    {
+        std::cout << "discarded[" << remaining << " unfilled units of order #" << incoming.id << "], OrderType::Market\n";
+    }
+
+    else if(remaining > 0 && incoming.type == OrderType::Ioc)
+    {
+        std::cout << "discarded[" << remaining << " unfilled units of order #" << incoming.id << "], OrderType::Market\n";
+    }
+                                                            
     return trades;
 }
 
