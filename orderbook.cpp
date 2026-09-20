@@ -3,17 +3,6 @@
 #include <iomanip>
 #include <algorithm> 
 
-void OrderBook::add_limit_order(const Order& order){
-    if(order.side == Side::Buy)
-    {
-        bids_[order.price].push_back(order);
-    }
-    else
-    {
-        asks_[order.price].push_back(order);
-    }
-}
-
 void OrderBook::print_book() const{
     std::cout << "-------- ORDER BOOK ---------\n";
     std::cout << "ASKS (sell):\n";
