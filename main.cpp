@@ -80,7 +80,7 @@ int main()
     */
 
     ///TESTING OrderType::Ioc
-    // IOC: fills what it can at its price cap, discards the rest
+    /*// IOC: fills what it can at its price cap, discards the rest
     book.add_order({10, Side::Sell, OrderType::Limit, 105, 50, 10});
     book.print_book();
     
@@ -96,6 +96,21 @@ int main()
     for (auto& x : i2) std::cout << "  trade " << x.quantity << " @ " << x.price << "\n";
     book.print_book();
     // expect: ZERO trades (108 < 110, doesn't cross); all 40 discarded; nothing rests 
+    */
 
+    ///TESTING OrderType::Fok
+    book.add_order({20, Side::Sell, OrderType::Limit, 110, 40, 20});
+    book.add_order({21, Side::Sell, OrderType::Limit, 111, 40, 21});   // 80 total available ≤ 111
+
+    book.print_book();
+    std::cout << "--- FOK buy 100 @ 111 (only 80 available) ---\n";
+    auto f1 = book.add_order({22, Side::Buy, OrderType::Fok, 111, 100, 22});
+    std::cout << "  trades: " << f1.size() << "\n";   // expect 0
+    book.print_book();                                 // expect 110 and 111 UNCHANGED (40 each)
+
+    std::cout << "--- FOK buy 80 @ 111 (exactly enough) ---\n";
+    auto f2 = book.add_order({23, Side::Buy, OrderType::Fok, 111, 80, 23});
+    for (auto& x : f2) std::cout << "  trade " << x.quantity << " @ " << x.price << "\n";
+    book.print_book();                                 // expect 40@110 + 40@111 filled; asks empty
     return 0;
 }

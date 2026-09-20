@@ -33,10 +33,46 @@ void OrderBook::print_book() const{
     }
 }
 
+bool OrderBook::can_fully_fill(const Order& incoming) const
+{
+    uint64_t available = 0;
+    if(incoming.side == Side::Buy)
+    {
+        for(auto [price, level]: asks_)
+        {
+            if(price > incoming.price) break;
+            for(const Order& o : level)
+            {
+                available += o.quantity;
+                if(available >= incoming.quantity) return true;
+            }
+        }
+    }
+    else if(incoming.side == Side::Sell)
+    {
+        for(auto [price, level]: bids_)
+        {
+            if(price < incoming.price) break;
+            for(const Order& o: level)
+            {
+                available += o.quantity;
+                if(available >= incoming.quantity) return true;
+            }
+        }
+    }
+    
+    return available >= incoming.quantity;
+}
 std::vector<Trade> OrderBook::add_order(const Order& incoming)
 {
     std::vector<Trade> trades;
     uint64_t remaining = incoming.quantity;
+    if(incoming.type == OrderType::Fok && can_fully_fill(incoming) == false) 
+    {
+        std::cout << "[Fok order #" << incoming.id << " killed - not enough liquidity to fill the order of quantity " << incoming.quantity << "]\n";
+        return {};
+    }
+
     if(incoming.side == Side::Buy)
     {
         while(remaining > 0 && !asks_.empty() && (asks_.begin()->first <= incoming.price || incoming.type == OrderType::Market))

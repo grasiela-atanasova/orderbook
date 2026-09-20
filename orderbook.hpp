@@ -20,6 +20,7 @@ public:
     void print_book () const;
     std::vector <Trade> add_order (const Order& incoming);
     bool cancel(uint64_t order_id);
+    bool can_fully_fill(const Order& incoming) const;
 
 private: //encapsulation
     std::map<uint64_t, PriceLevel> asks_;
