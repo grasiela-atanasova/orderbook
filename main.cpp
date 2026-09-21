@@ -34,6 +34,7 @@ int main()
     }
 
     std::cout << "Processed " << N << " orders, executed " << total_trades << " trades\n";
-
+    book.print_book();
+    
     return 0;
 }
