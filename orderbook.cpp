@@ -72,7 +72,7 @@ std::vector<Trade> OrderBook::add_order(const Order& incoming)
     uint64_t remaining = incoming.quantity;
     if(incoming.type == OrderType::Fok && can_fully_fill(incoming) == false) 
     {
-        std::cout << "[Fok order #" << incoming.id << " killed - not enough liquidity to fill the order of quantity " << incoming.quantity << "]\n";
+        ///std::cout << "[Fok order #" << incoming.id << " killed - not enough liquidity to fill the order of quantity " << incoming.quantity << "]\n";
         return {};
     }
 
@@ -136,12 +136,12 @@ std::vector<Trade> OrderBook::add_order(const Order& incoming)
 
     else if(remaining > 0 && incoming.type == OrderType::Market)
     {
-        std::cout << "discarded[" << remaining << " unfilled units of order #" << incoming.id << "], OrderType::Market\n";
+        ///std::cout << "discarded[" << remaining << " unfilled units of order #" << incoming.id << "], OrderType::Market\n";
     }
 
     else if(remaining > 0 && incoming.type == OrderType::Ioc)
     {
-        std::cout << "discarded[" << remaining << " unfilled units of order #" << incoming.id << "], OrderType::Market\n";
+        ///std::cout << "discarded[" << remaining << " unfilled units of order #" << incoming.id << "], OrderType::Market\n";
     }
                                                             
     return trades;
