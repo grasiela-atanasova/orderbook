@@ -3,3 +3,6 @@
 *.o
 /output/
 /build/
+book.csv
+info.txt
+.vscode/
