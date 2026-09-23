@@ -46,7 +46,8 @@ random limit orders). This measures matching throughput, not real-market network
 latency.
 
 ![Order book depth](depth.png)
-*Depth chart after 1M random orders: rders near the mid-price trade away and unmatched orders accumulate at the edges of the price band (95 bids / 105 asks).*
+
+*Depth chart after 1M random orders: orders near the mid-price trade away and unmatched orders accumulate at the edges of the price band (95 bids / 105 asks).*
 
 ## Possible extensions
 - Lower-latency data structures (object pools, intrusive lists, array-indexed price levels)
