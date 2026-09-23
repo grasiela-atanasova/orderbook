@@ -13,7 +13,7 @@ Requires a C++20 compiler (e.g. g++ 13+).
 
 **Run the benchmark / driver:**
 ```
-g++ -std=c++20 -O2 main.cpp orderbook.cpp -o app.exe
+g++ -std=c++20 -O2 benchmark.cpp orderbook.cpp -o app.exe
 ./app.exe
 ```
 **Run the tests:**
