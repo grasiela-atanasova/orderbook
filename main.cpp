@@ -28,7 +28,7 @@ int main()
         if(type_num <= 80)      type = OrderType::Limit;
         else if(type_num <= 90) type = OrderType::Market;
         else if(type_num <= 97) type = OrderType::Ioc;
-        else                          type = OrderType::Fok;
+        else                    type = OrderType::Fok;
 
         Order o = {i, side, type, price_dist(rng), qty_dist(rng), i};
         orders.push_back(o);

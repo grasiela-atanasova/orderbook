@@ -23,7 +23,7 @@ public:
     uint64_t quantity_at(Side side, uint64_t price) const;
     void dump_csv(const std::string& filename) const;
 
-private: //encapsulation
+private:
     std::map<uint64_t, PriceLevel> asks_;
     std::map<uint64_t, PriceLevel, std::greater<uint64_t>> bids_; 
     std::unordered_map<uint64_t, OrderLocation> index_;
