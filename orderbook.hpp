@@ -21,6 +21,7 @@ public:
     bool cancel(uint64_t order_id);
     bool can_fully_fill(const Order& incoming) const;
     uint64_t quantity_at(Side side, uint64_t price) const;
+    void dump_csv(const std::string& filename) const;
 
 private: //encapsulation
     std::map<uint64_t, PriceLevel> asks_;

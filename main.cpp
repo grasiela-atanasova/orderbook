@@ -47,5 +47,7 @@ int main()
     std::cout << "Processed " << N << " orders in " << elapsed.count() << " s\n";
     std::cout << "Trades: " << total_trades << "\n";
     std::cout << "Throughput: " << (N/elapsed.count()) << " orders/sec\n";
+
+    book.dump_csv("book.csv");
     return 0;
 }

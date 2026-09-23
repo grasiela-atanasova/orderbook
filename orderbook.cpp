@@ -2,6 +2,7 @@
 #include "orderbook.hpp"
 #include <iomanip>
 #include <algorithm> 
+#include <fstream>
 
 void OrderBook::print_book() const{
     std::cout << "-------- ORDER BOOK ---------\n";
@@ -168,4 +169,23 @@ bool OrderBook::cancel(uint64_t order_id)
     
     index_.erase(found);
     return true;
+}
+
+void OrderBook::dump_csv(const std::string& filename) const
+{
+    std::ofstream out(filename);
+    out << "side,price,quantity\n";
+    for(auto [price, level]: asks_)
+    {
+        uint64_t total = 0;
+        for(const Order& o: level)  total += o.quantity;
+        out << "ask," << price << "," << total << "\n";
+    }
+
+    for(auto [price, level]: bids_)
+    {
+        uint64_t total = 0;
+        for(const Order& o: level)  total += o.quantity;
+        out << "bid," << price << "," << total << "\n";
+    }
 }
